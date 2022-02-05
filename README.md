@@ -19,7 +19,7 @@ Die Demo Word Vorlage ist mit dem Kennwort "demo" geschützt.
 
 ## Kompilieren
 
-Um Datenschutz konform zu bleiben, lässt sich dieses Tool als *.exe exportieren und an die Kollegen weiter verteilen.
+Um Datenschutzkonform zu bleiben, lässt sich dieses Tool als *.exe exportieren und an die Kollegen weiter verteilen.
 
 Dazu ein venv anlegen und die Pakete der requirement.txt installieren.
 
@@ -88,3 +88,5 @@ Dieser Schritt muss zur Not manuell erfolgen
    - Datum mit Uhrzeit in der Vorschau ist kein Grund zur Sorge. 
    - Das Datumsformat wird in der Word-Vorlage definiert, sollte die Zeugnisausgabe falsch sein, muss die Word-Vorlage korrigiert werden.
    - ![](img/Datum_Word_Format.PNG "Preview")
+   
+ - Dieses projekt funktioniert nur unter Windows & Office (Word & Excel) müssen installiert sein.
