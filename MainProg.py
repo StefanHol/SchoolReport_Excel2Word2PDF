@@ -18,7 +18,7 @@ import json_helper
 
 __version__ = "0.0.16"
 __author__ = "Stefan Holstein"
-__repo__ = "http://git......"
+__repo__ = r"https://github.com/StefanHol/SchoolReport_Excel2Word2PDF"
 __config_json__ = "config.json"
 __Anleitung__ = "SchoolReport Excel2Word2PDF.pdf"
 # rebuild_GUI = True
