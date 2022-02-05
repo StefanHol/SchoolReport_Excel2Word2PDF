@@ -89,4 +89,4 @@ Dieser Schritt muss zur Not manuell erfolgen
    - Das Datumsformat wird in der Word-Vorlage definiert, sollte die Zeugnisausgabe falsch sein, muss die Word-Vorlage korrigiert werden.
    - ![](img/Datum_Word_Format.PNG "Preview")
    
- - Dieses projekt funktioniert nur unter Windows & Office (Word & Excel) müssen installiert sein.
+ - Dieses Projekt funktioniert nur unter Windows & Office (Word & Excel) müssen installiert sein.
