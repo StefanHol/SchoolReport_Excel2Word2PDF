@@ -1,0 +1,21 @@
+pushButton_Zeugnisvorlage, lineEdit_Zeugnisvorlage
+pushButton_Excel_Zeugnisse, lineEdit_Zeugnisse_xlsx
+pushButton_Ausgabe_Ordner, lineEdit_ZeugnisAusgabe
+
+tableWidget
+pushButton_create_only_selected_docx
+pushButton_create_only_selected_docx_pdf
+pushButton_create_all_docx
+pushButton_create_all_docx_pdf
+
+
+
+    view = QtGui.QTableView()
+    model = PandasModel(your_pandas_data)
+    view.setModel(model)
+
+    view.show()
+	
+	
+model = PandasModel(your_pandas_data_frame)
+your_tableview.setModel(model)
