@@ -21,9 +21,9 @@ Die Demo Word Vorlage ist mit dem Kennwort "demo" geschützt.
 
 Um Datenschutz konform zu bleiben, lässt sich dieses Tool als *.exe exportieren und an die Kollegen weiter verteilen.
 
-Dazu ein venv anlegen und die pakete der requirement.txt installieren.
+Dazu ein venv anlegen und die Pakete der requirement.txt installieren.
 
-Die build.bat aus dem venv heraus gestartet, erzeugt einen dist ordner, in dem das fertige Porgramm abgelegt wird. 
+Die build.bat aus dem venv heraus gestartet, erzeugt einen dist Ordner, in dem das fertige Porgramm abgelegt wird. 
 
 ## Konfigurieren
 Damit man nicht immer bis zum Ziel navigieren muss, lässt sich der Dokumentenstartordner ändern.
