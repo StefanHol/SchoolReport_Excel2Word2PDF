@@ -12,7 +12,6 @@ from shutil import copyfile
 import os
 # from collections import OrderedDict
 import time
-import sys
 import json_helper
 # import Excel_to_Word_in_arbeit
 # from helper_Word import helper_Word as hw
@@ -49,16 +48,16 @@ except Exception as e:
 def compile_GUI():
     if used_Qt_Version == 4:
         print("Compile QUI for Qt Version: " + str(used_Qt_Version))
-        os.system("pyuic4 -o Converter_ui.py Converter.ui")
+        os.system("pyuic4 -o GUI\Converter_ui.py GUI\Converter.ui")
     elif used_Qt_Version == 5:
         print("Compile QUI for Qt Version: " + str(used_Qt_Version))
-        os.system("pyuic5 -o Converter_ui.py Converter.ui")
+        os.system("pyuic5 -o GUI\Converter_ui.py GUI\Converter.ui")
 
 
 if rebuild_GUI:
     compile_GUI()
 
-from Converter_ui import Ui_MainWindow
+from GUI.Converter_ui import Ui_MainWindow
 
 
 import logging

@@ -26,10 +26,10 @@ from MainProg import __version__ as progversion
 def compile_GUI():
     if used_Qt_Version == 4:
         print("Compile QUI for Qt Version: " + str(used_Qt_Version))
-        os.system("pyuic4 -o Converter_ui.py Converter.ui")
+        os.system("pyuic4 -o GUI\Converter_ui.py GUI\Converter.ui")
     elif used_Qt_Version == 5:
         print("Compile QUI for Qt Version: " + str(used_Qt_Version))
-        os.system("pyuic5 -o Converter_ui.py Converter.ui")
+        os.system("pyuic5 -o GUI\Converter_ui.py GUI\Converter.ui")
 
 
 cwd = os.getcwd()
