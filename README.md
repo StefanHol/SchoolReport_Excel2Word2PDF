@@ -7,6 +7,24 @@
 
 ![](img/GUI_Preview_w1024.png "Preview")
 
+
+Zeugnisse für Schulen mit wenig Budget erstellen.
+
+Vorlage in Word anlegen, dazu die Daten übersichtlich in Excel vorbereiten/eintragen und in einer art Serienbrief ausgeben.
+
+Das beigelegte Excel Demo kann bis zu 30 Schüler verarbeiten, diese Grenze kann bei Bedarf in Excel erweitert werden.
+Alle auszulesenden Excel Daten sind im NamensManager zu finden. und können darüber konfiguriert werden.
+
+Die Demo Word Vorlage ist mit dem Kennwort "demo" geschützt.
+
+## Kompilieren
+
+Um Datenschutz konform zu bleiben, lässt sich dieses Tool als *.exe exportieren und an die Kollegen weiter verteilen.
+
+Dazu ein venv anlegen und die pakete der requirement.txt installieren.
+
+Die build.bat aus dem venv heraus gestartet, erzeugt einen dist ordner, in dem das fertige Porgramm abgelegt wird. 
+
 ## Konfigurieren
 Damit man nicht immer bis zum Ziel navigieren muss, lässt sich der Dokumentenstartordner ändern.
  - Dazu gehe auf "Config" -> "Wähle Dokumentenstartordner"
