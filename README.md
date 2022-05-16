@@ -2,13 +2,16 @@
 
 
 ![](GUI/icons/128x128.png "Logo")
+![](img/pythonmagic.png "pythonmagic")
+
 
 ## Übersicht
 
-![](img/GUI_Preview_w1024.png "Preview")
+![](img/Datenzusammenhang.png "Zusammenhang")
+![](img/GUI_Preview_w1024.png "GUI Preview")
 
 
-Zeugnisse für Schulen mit wenig Budget erstellen.
+Schulen müssen mit einem knappen Budget auskommen, hiermit können sie ohne weitere Investition Ihre Zeugnisse komfortabel erstellen. 
 
 Vorlage in Word anlegen, dazu die Daten übersichtlich in Excel vorbereiten/eintragen und in einer art Serienbrief ausgeben.
 
@@ -84,9 +87,9 @@ Dieser Schritt muss zur Not manuell erfolgen
      - Sollten hier Unterschiede auftreten, müssen die beiden Vorlagen aneinander abgeglichen werden
 
  - Datum mit Uhrzeit in der Vorschau:
-   - ![](img/Datum_Uhrzeit.PNG "Preview")
+   - ![](img/Datum_Uhrzeit.PNG "Datum in der Vorschau")
    - Datum mit Uhrzeit in der Vorschau ist kein Grund zur Sorge. 
    - Das Datumsformat wird in der Word-Vorlage definiert, sollte die Zeugnisausgabe falsch sein, muss die Word-Vorlage korrigiert werden.
-   - ![](img/Datum_Word_Format.PNG "Preview")
+   - ![](img/Datum_Word_Format.PNG "Datums-Feld in Word konfigurieren")
    
  - Dieses Projekt funktioniert nur unter Windows & Office (Word & Excel) müssen installiert sein.
