@@ -8,6 +8,7 @@ import logging.handlers
 
 try:
     from PyQt5.QtWidgets import QApplication
+    # from PyQt5.QtWidgets import QSystemTrayIcon
     from PyQt5.QtGui import QIcon
     from PyQt5.QtCore import QSize
     used_Qt_Version = 5
@@ -74,8 +75,19 @@ if __name__ == "__main__":
     app_icon.addFile('GUI/icons/64x64.png', QSize(64, 64))
     app_icon.addFile('GUI/icons/128x128.png', QSize(128, 128))
     app_icon.addFile('GUI/icons/256x256.png', QSize(256, 256))
+    app_icon.addFile('GUI/icons/16x16.ico', QSize(16, 16))
+    app_icon.addFile('GUI/icons/24x24.ico', QSize(24, 24))
+    app_icon.addFile('GUI/icons/32x32.ico', QSize(32, 32))
+    app_icon.addFile('GUI/icons/48x48.ico', QSize(48, 48))
+    app_icon.addFile('GUI/icons/64x64.ico', QSize(64, 64))
+    app_icon.addFile('GUI/icons/92x92.ico', QSize(92, 92))
+    app_icon.addFile('GUI/icons/128x128.ico', QSize(128, 128))
+    app_icon.addFile('GUI/icons/256x256.ico', QSize(256, 256))
     app.setWindowIcon(app_icon)
-    # gui.setWindowIcon(QIcon("img" + os.path.sep + "Logo.png"))
+    # app.setWindowIcon(QIcon("GUI" + os.path.sep + "icons" + os.path.sep+ '256x256.png'))
+    # gui.setWindowIcon(QIcon("GUI" + os.path.sep + "icons" + os.path.sep+ '256x256.png'))
 
+    # trayIcon = QSystemTrayIcon(QIcon("GUI" + os.path.sep + "icons" + os.path.sep+ '256x256.png'), parent=app)
+    # trayIcon.show()
     gui.show()
     sys.exit(app.exec_())

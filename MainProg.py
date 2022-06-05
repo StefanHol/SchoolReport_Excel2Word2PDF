@@ -10,17 +10,18 @@ from Docx_to_pdf import Docx_to_PDF
 from PDF_Combiner import Combine_PDF
 from shutil import copyfile
 import os
+import subprocess
 # from collections import OrderedDict
 import time
 import json_helper
 # import Excel_to_Word_in_arbeit
 # from helper_Word import helper_Word as hw
 
-__version__ = "0.0.16"
+__version__ = "0.0.19"
 __author__ = "Stefan Holstein"
 __repo__ = r"https://github.com/StefanHol/SchoolReport_Excel2Word2PDF"
 __config_json__ = "config.json"
-__Anleitung__ = "SchoolReport Excel2Word2PDF.pdf"
+__Anleitung__ = "README.pdf"
 # rebuild_GUI = True
 rebuild_GUI = False
 
@@ -36,7 +37,7 @@ try:
     from PyQt5.QtGui import QFont, QIcon, QPixmap
     from PyQt5.QtWidgets import QTableView, QAbstractItemView, QCompleter, QLineEdit, QHeaderView
 
-    from PyQt5.QtCore import QAbstractTableModel, Qt
+    from PyQt5.QtCore import QAbstractTableModel, Qt, QSize
 
     used_Qt_Version = 5
 except Exception as e:
@@ -62,7 +63,12 @@ from GUI.Converter_ui import Ui_MainWindow
 
 import logging
 
-logging.basicConfig(level=logging.WARNING)
+logging.basicConfig(level=logging.INFO)
+# logging level
+# ERROR: 40
+# WARNING: 30
+# INFO: 20
+# DEBUG: 10
 
 
 class PandasModel(QAbstractTableModel):
@@ -208,10 +214,10 @@ class create_letter_of_reference():
         for ColumnName in df:
             # print(df["Name"].iloc[df_index], ":\t",ColumnName , "\t",  df[ColumnName].iloc[df_index])
             # ToDo: Call Input Function here
-            SchülerName = df["Name"].iloc[df_index]
+            SchuelerName = df["Name"].iloc[df_index]
             ZellenNameOderArray = ColumnName
             Cellen_Oder_Array_Wert = df[ColumnName].iloc[df_index]
-            self.logger.info("Name: {} \t {} \t {}".format(SchülerName, ColumnName, Cellen_Oder_Array_Wert))
+            self.logger.info("Name: {} \t {} \t {}".format(SchuelerName, ColumnName, Cellen_Oder_Array_Wert))
             # ToDo: Call Input Function here
 
         try:
@@ -410,9 +416,11 @@ class MainProg(QMainWindow):
 
         self.ui.pushButton_Dummy.clicked.connect(self.dummy)
         self.ui.pushButton_combine_pdfs.clicked.connect(self.combine_all_PDFs_in_selected_output_folder)
-        self.ui.pushButton_convert_all_docx_tp_pdf.clicked.connect(self.convert_all_docx_to_pdf)
+        self.ui.pushButton_convert_all_docx_to_pdf.clicked.connect(self.convert_all_docx_to_pdf)
+        self.ui.pushButton_convert_selected_docx_to_pdf.clicked.connect(self.convert_selected_docx_to_pdf)
 
         self.ui.pushButton_PDF_Folder.clicked.connect(self.select_PDF_folder)
+        self.ui.pushButton_go.clicked.connect(self.run_go_button)
 
         self.ui.actionSet_search_folder.triggered.connect(self.set_dokument_search_folder)
         self.ui.actionAutomatisch_PDF_Ordner_anlegen.triggered.connect(self.Toggle_actionAutomatisch_PDF_Ordner_anlegen)
@@ -422,7 +430,24 @@ class MainProg(QMainWindow):
 
         self.ui.actionAbout.triggered.connect(self.show_about)
 
+
+        self.ui.tabWidget.removeTab(2)
+        self.ui.tabWidget.removeTab(1)
+        # tabtohide = self.ui.tabWidget.ta
+        # hiddenindex = self.ui.tabWidget.indexOf()
+
+        # Dummy Button en- / disable
         self.ui.pushButton_Dummy.setHidden(True)
+        # self.ui.pushButton_Dummy.setHidden(False)
+        # self.ui.pushButton_Dummy.setEnabled(True)
+
+        self.ui.pushButton_create_only_selected_docx.setHidden(True)
+        self.ui.pushButton_create_only_selected_docx_pdf.setHidden(True)
+        self.ui.pushButton_create_all_docx.setHidden(True)
+        self.ui.pushButton_create_all_docx_pdf.setHidden(True)
+        self.ui.pushButton_combine_pdfs.setHidden(True)
+        self.ui.pushButton_convert_all_docx_to_pdf.setHidden(True)
+        self.ui.pushButton_convert_selected_docx_to_pdf.setHidden(True)
 
         # add banner image
         banner_name = "img" + os.path.sep + "Logo.png"
@@ -475,14 +500,12 @@ class MainProg(QMainWindow):
 
     def open_output_folder(self):
         self.logger.debug("open_output_folder")
-        import subprocess
         # Open Script File Location
         self.logger.debug('open =', self.output_folder)
         subprocess.Popen(r'explorer ' + self.output_folder)
 
     def open_PDF_output_folder(self):
         self.logger.debug("open_PDF_output_folder")
-        import subprocess
         # Open Script File Location
         self.logger.debug('open =', self.output_pdf_folder)
         subprocess.Popen(r'explorer ' + self.output_pdf_folder)
@@ -493,7 +516,7 @@ class MainProg(QMainWindow):
         folder = dialog.getExistingDirectory(None, 'Wähle den PDF Ausgabeordner', self.work_folder)
         folder = str(folder.replace('/', os.path.sep))
         if os.path.exists(folder):
-            self.logger.info("PDF_folder", folder)
+            self.logger.info("PDF_folder: {}".format(folder))
             selected = True
             self.set_PDF_Folder(folder)
 
@@ -505,6 +528,22 @@ class MainProg(QMainWindow):
         self.pdf_output_selected = True
         self.enable_buttons()
 
+    def run_go_button(self) -> None:
+        if self.ui.radioButton_create_only_selected_docx.isChecked():
+            self.create_single_selected_reference_word()
+        elif self.ui.radioButton_create_only_selected_docx_pdf.isChecked():
+            self.create_single_selected_reference_word_and_pdf()
+        elif self.ui.radioButton_create_all_docx.isChecked():
+            self.create_all_references_word()
+        elif self.ui.radioButton_create_all_docx_pdf.isChecked():
+            self.create_all_references_word_and_pdf()
+        elif self.ui.radioButton_combine_pdfs.isChecked():
+            self.combine_all_PDFs_in_selected_output_folder()
+        elif self.ui.radioButton_convert_all_docx_to_pdf.isChecked():
+            self.convert_all_docx_to_pdf()
+        elif self.ui.radioButton_convert_selected_docx_to_pdf.isChecked():
+            self.convert_selected_docx_to_pdf()
+
     def enable_buttons(self):
         if self.word_selected and not self.excel_selected:
             self.ui.pushButton_Excel_Zeugnisse.setEnabled(True)
@@ -514,20 +553,43 @@ class MainProg(QMainWindow):
         if self.excel_selected and self.word_selected and self.output_selected:
             self.ui.pushButton_create_only_selected_docx.setEnabled(True)
             self.ui.pushButton_create_all_docx.setEnabled(True)
+            # radio buttons
+            self.ui.radioButton_create_only_selected_docx.setEnabled(True)
+            self.ui.radioButton_create_all_docx.setEnabled(True)
+            self.ui.pushButton_go.setEnabled(True)
 
         if self.excel_selected and self.word_selected and self.output_selected and self.pdf_output_selected:
             self.ui.pushButton_create_only_selected_docx.setEnabled(True)
             self.ui.pushButton_create_only_selected_docx_pdf.setEnabled(True)
             self.ui.pushButton_create_all_docx.setEnabled(True)
             self.ui.pushButton_create_all_docx_pdf.setEnabled(True)
-            self.ui.pushButton_convert_all_docx_tp_pdf.setEnabled(True)
+            self.ui.pushButton_convert_all_docx_to_pdf.setEnabled(True)
             self.ui.pushButton_combine_pdfs.setEnabled(True)
+            # radio buttons
+            self.ui.radioButton_create_only_selected_docx.setEnabled(True)
+            self.ui.radioButton_create_only_selected_docx_pdf.setEnabled(True)
+            self.ui.radioButton_create_all_docx.setEnabled(True)
+            self.ui.radioButton_create_all_docx_pdf.setEnabled(True)
+            self.ui.radioButton_convert_all_docx_to_pdf.setEnabled(True)
+            self.ui.radioButton_combine_pdfs.setEnabled(True)
+            self.ui.pushButton_go.setEnabled(True)
 
         if self.output_selected:
             self.ui.pushButton_OpenOutputFolder.setEnabled(True)
+            self.ui.pushButton_convert_selected_docx_to_pdf.setEnabled(True)
+            self.ui.pushButton_convert_all_docx_to_pdf.setEnabled(True)
+            self.ui.pushButton_combine_pdfs.setEnabled(True)
+            # radio buttons
+            self.ui.radioButton_convert_selected_docx_to_pdf.setEnabled(True)
+            self.ui.radioButton_convert_all_docx_to_pdf.setEnabled(True)
+            self.ui.radioButton_combine_pdfs.setEnabled(True)
+            self.ui.pushButton_go.setEnabled(True)
 
         if self.pdf_output_selected:
             self.ui.pushButton_OpenPDFOutputFolder.setEnabled(True)
+            self.ui.pushButton_combine_pdfs.setEnabled(True)
+            self.ui.radioButton_combine_pdfs.setEnabled(True)
+            self.ui.pushButton_go.setEnabled(True)
 
     def set_dokument_search_folder(self):
         dialog = QFileDialog()
@@ -561,7 +623,8 @@ class MainProg(QMainWindow):
                 self.logger.debug("kein Word Dokument gewählt")
 
         except Exception as e:
-            print("select_new_Word_Template_File"  + str(e))
+            self.logger.info("select_new_Word_Template_File: {}".format(str(e)))
+            # print("select_new_Word_Template_File"  + str(e))
         if selected:
             self.word_selected = True
             self.logger.info(self.srcFileName)
@@ -602,6 +665,30 @@ class MainProg(QMainWindow):
             # self.ui.pushButton_Ausgabe_Ordner.setEnabled(True)
             if not self.creator_class.wichtige_meldung == "":
                 self.critical_messagebox("Critical", self.creator_class.wichtige_meldung)
+
+    def select_word_file(self):
+        #
+        dialog = QFileDialog()
+        dialog.setFileMode(QFileDialog.FileMode())
+        selected = False
+        try:
+            filter = "Office File (*.docx)"
+            word_file = dialog.getOpenFileName(self, 'Wähle ein Dokument zum Konvertieren *.docx -> pdf', self.output_folder, filter,
+                                                   "*.docx")
+            word_file = str(word_file[0].replace('/', os.path.sep))
+            # self.srcFileName = word_file
+            if os.path.exists(word_file):
+                selected = True
+            else:
+                self.logger.debug("kein Word Dokument gewählt")
+
+        except Exception as e:
+            self.logger.info("select_new_Word_Template_File: {}".format(str(e)))
+        #     # print("select_new_Word_Template_File"  + str(e))
+        if selected:
+            return [selected, word_file]
+        else:
+            return [selected, ""]
 
     def critical_messagebox(self, title="Title", text="text"):
         msg = QMessageBox()
@@ -658,7 +745,7 @@ class MainProg(QMainWindow):
             infile = self.output_folder + os.path.sep + each
             outfile = self.output_pdf_folder + os.path.sep + each.replace(self.converter.FileExtention(each), "pdf")
             self.logger.info(outfile)
-            self.converter.covx_to_pdf(infile, outfile)
+            self.converter.docx_to_pdf(infile, outfile)
         self.write_infoline(outfile)
 
     def create_all_references_word(self):
@@ -688,7 +775,7 @@ class MainProg(QMainWindow):
             outfile = self.output_pdf_folder + os.path.sep + each.replace(self.converter.FileExtention(each), "pdf")
             self.logger.info(outfile)
             # self.ui.lineEdit_infoline.setText(str(outfile.split(os.path.sep)[-1]))
-            self.converter.covx_to_pdf(infile, outfile)
+            self.converter.docx_to_pdf(infile, outfile)
         self.write_infoline("Alle Word und PDF-Dokumente erzeugt.")
 
     def convert_all_docx_to_pdf(self):
@@ -696,6 +783,20 @@ class MainProg(QMainWindow):
         converter = Docx_to_PDF()
         converter.convert_all_docx_of_inputFolder_to_PDF_in_outputFolder(self.output_folder, self.output_pdf_folder)
         self.write_infoline("Alle Word Dokumente zu PDF konvertiert.")
+
+    def convert_selected_docx_to_pdf(self):
+        # Todo:
+        # 0. Ausgabe Ordner muss definiert sein
+        # 1. Wähle Datei
+        # 2. Konvertiere datei in ausgabe ordner
+        selected, word_file = self.select_word_file()
+        if selected:
+            self.logger.info("convert_selected_docx_to_pdf file: {}".format(word_file))
+            converter = Docx_to_PDF()
+            converter.convert_selected_docx_file_to_PDF_in_outputFolder(word_file, self.output_pdf_folder)
+        else:
+            self.logger.info("convert_selected_docx_to_pdf nothing selected: {}".format(word_file))
+
 
     def combine_all_PDFs_in_selected_output_folder(self):
         PDFOutputName = self.output_pdf_folder + os.path.sep + "Output.pdf"
@@ -739,7 +840,6 @@ class MainProg(QMainWindow):
         # print("font size", size)
         new_font = QFont("", size) # , QFont.Bold)
         msgBox.setFont(new_font)
-
         msgBox.setStandardButtons(QMessageBox.Ok)
         result = msgBox.exec()
 
@@ -775,10 +875,28 @@ class MainProg(QMainWindow):
 
     def dummy(self):
         # https://stackoverflow.com/questions/37035756/how-to-select-multiple-rows-in-qtableview-using-selectionmodel
-        row = self.getSelecet_Row()
-        indexes = self.ui.tableView.selectionModel().selectedRows()
-        self.logger.info(row, indexes)
+        # row = self.getSelecet_Row()
+        # indexes = self.ui.tableView.selectionModel().selectedRows()
+        # self.logger.info(row, indexes)
         # outfile = r"W:\jdsfjkhkdfsfjk\hijfsdhjfdskhk\file.xlsx"
         # print(outfile.split(os.path.sep))
         # print(outfile.split(os.path.sep)[-1])
         # self.ui.lineEdit_infoline.setText(outfile.split(os.path.sep)[-1])
+
+        # reply = os.system(r"tasklist")
+        # print(reply)
+        # print(type(reply))
+        converter = Docx_to_PDF()
+        converter.check_word_running()
+
+        # from subprocess import Popen, PIPE
+        # command = ["tasklist"]
+        # pipe = Popen(command, shell=True, stdout=PIPE, stderr=PIPE)
+        # pipe.communicate()
+        # reply = str(pipe.communicate())
+        # process_to_find = "winword.exe"
+        # if process_to_find in reply.lower():
+        #     print(process_to_find + " ist drin")
+        #     pass
+        # else:
+        #     print("kein " + process_to_find)
