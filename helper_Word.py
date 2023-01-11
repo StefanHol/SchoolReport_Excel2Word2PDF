@@ -77,6 +77,8 @@ class helper_Word():
                 Text = 6
             elif Text == "nicht erteilt":
                 Text = 7
+            elif Text == "ausgesetzt":
+                Text = 8
             else:
                 Text = 0
             # print("Note")
